@@ -1,0 +1,28 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useState, useEffect } from 'react';
+import { useAppContext } from '../App';
+const ProfilePage = () => {
+    const { state, dispatch } = useAppContext();
+    const [profile, setProfile] = useState(state.profile);
+    const [isSaved, setIsSaved] = useState(false);
+    useEffect(() => {
+        setProfile(state.profile);
+    }, [state.profile]);
+    const handleChange = (e) => {
+        const { name, value, type } = e.target;
+        // For checkboxes (like notification toggles)
+        const inputValue = type === 'checkbox' ? e.target.checked : value;
+        setProfile(prev => (Object.assign(Object.assign({}, prev), { [name]: inputValue })));
+        setIsSaved(false); // Reset saved status on change
+    };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        dispatch({ type: 'SET_PROFILE', payload: profile });
+        setIsSaved(true);
+        setTimeout(() => setIsSaved(false), 3000); // Hide message after 3 seconds
+    };
+    const InputField = ({ label, name, value, onChange, type = "text", placeholder }) => (_jsxs("div", { children: [_jsx("label", { htmlFor: name, className: "block text-sm font-medium text-textSecondary mb-1", children: label }), _jsx("input", { type: type, id: name, name: name, value: value, onChange: onChange, placeholder: placeholder, className: "w-full p-2.5 border border-slate-300 rounded-md shadow-sm focus:ring-primary focus:border-primary bg-surface" })] }));
+    const ToggleSwitch = ({ label, name, checked, onChange, description }) => (_jsxs("div", { className: "flex items-start justify-between py-3", children: [_jsxs("div", { children: [_jsx("label", { htmlFor: name, className: "block text-sm font-medium text-textPrimary", children: label }), description && _jsx("p", { className: "text-xs text-textSecondary", children: description })] }), _jsxs("div", { className: "relative inline-flex items-center cursor-pointer", children: [_jsx("input", { type: "checkbox", id: name, name: name, checked: checked, onChange: onChange, className: "sr-only peer" }), _jsx("div", { className: "w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-light rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-primary" })] })] }));
+    return (_jsxs("div", { className: "max-w-2xl mx-auto space-y-6", children: [_jsx("h1", { className: "text-3xl font-bold text-textPrimary", children: "My Profile" }), _jsxs("form", { onSubmit: handleSubmit, className: "bg-surface shadow-lg rounded-lg p-6 md:p-8 space-y-6", children: [_jsx("h2", { className: "text-xl font-semibold text-textPrimary border-b border-slate-200 pb-3", children: "Personal Information" }), _jsx(InputField, { label: "Your Name", name: "userName", value: profile.userName, onChange: handleChange, placeholder: "Enter your name" }), _jsx("h2", { className: "text-xl font-semibold text-textPrimary border-b border-slate-200 pb-3 pt-4", children: "Contact Information" }), _jsx(InputField, { label: "Doctor's Name", name: "doctorName", value: profile.doctorName, onChange: handleChange, placeholder: "Dr. Smith" }), _jsx(InputField, { label: "Doctor's Phone", name: "doctorPhone", type: "tel", value: profile.doctorPhone, onChange: handleChange, placeholder: "e.g. (555) 123-4567" }), _jsx(InputField, { label: "Pharmacy Name", name: "pharmacyName", value: profile.pharmacyName, onChange: handleChange, placeholder: "Local Pharmacy" }), _jsx(InputField, { label: "Pharmacy Phone", name: "pharmacyPhone", type: "tel", value: profile.pharmacyPhone, onChange: handleChange, placeholder: "e.g. (555) 987-6543" }), _jsx("h2", { className: "text-xl font-semibold text-textPrimary border-b border-slate-200 pb-3 pt-4", children: "Health Information" }), _jsxs("div", { children: [_jsx("label", { htmlFor: "knownAllergies", className: "block text-sm font-medium text-textSecondary mb-1", children: "Known Drug Allergies" }), _jsx("textarea", { id: "knownAllergies", name: "knownAllergies", value: profile.knownAllergies, onChange: handleChange, rows: 3, placeholder: "List any drug allergies you have (e.g., Penicillin, Aspirin)", className: "w-full p-2.5 border border-slate-300 rounded-md shadow-sm focus:ring-primary focus:border-primary bg-surface" })] }), _jsx("h2", { className: "text-xl font-semibold text-textPrimary border-b border-slate-200 pb-3 pt-4", children: "Notification Settings" }), _jsxs("div", { className: "divide-y divide-slate-200", children: [_jsx(ToggleSwitch, { label: "Enable Push Notifications", name: "enablePushNotifications", checked: profile.enablePushNotifications, onChange: handleChange, description: "Get reminders on your device when it's time for medicine. (UI Only)" }), _jsx(ToggleSwitch, { label: "Email Reminders", name: "enableEmailReminders", checked: profile.enableEmailReminders, onChange: handleChange, description: "Receive email alerts for your medication schedule. (UI Only)" })] }), _jsxs("div", { className: "pt-4 flex items-center space-x-4", children: [_jsx("button", { type: "submit", className: "bg-primary text-white py-2.5 px-6 rounded-md shadow hover:bg-primary-dark transition duration-150 font-medium", children: "Save Profile" }), isSaved && _jsx("p", { className: "text-sm text-green-600 font-medium", children: "Profile saved successfully!" })] })] })] }));
+};
+export default ProfilePage;
